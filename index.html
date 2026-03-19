@@ -123,13 +123,8 @@ top:18px;
 
 }
 
-.eye.left{
-left:14px;
-}
-
-.eye.right{
-right:14px;
-}
+.eye.left{left:14px;}
+.eye.right{right:14px;}
 
 .pupil{
 
@@ -268,11 +263,9 @@ let complete=0;
 
 let z=1;
 
-/* 50% bigger */
+/* 50% bigger again */
 
-const SIZE=63;
-
-/* spawn separated */
+const SIZE=95;
 
 colors.forEach((color,c)=>{
 
@@ -303,7 +296,7 @@ let dy=y-other.y;
 
 let dist=Math.hypot(dx,dy);
 
-if(dist<SIZE*1.3){
+if(dist<SIZE*1.1){
 
 placed=false;
 
@@ -350,7 +343,6 @@ locked:false
 eggs.forEach(e=>{
 
 let ox;
-
 let oy;
 
 e.el.onpointerdown=ev=>{
@@ -386,14 +378,43 @@ e.y=ev.clientY-rect.top-oy;
 /* bounds */
 
 if(e.x<0)e.x=0;
-
 if(e.y<0)e.y=0;
 
-if(e.x>stage.clientWidth-SIZE)e.x=stage.clientWidth-SIZE;
+if(e.x>stage.clientWidth-SIZE)
+e.x=stage.clientWidth-SIZE;
 
-if(e.y>stage.clientHeight-SIZE)e.y=stage.clientHeight-SIZE;
+if(e.y>stage.clientHeight-SIZE)
+e.y=stage.clientHeight-SIZE;
 
-/* push others but allow chicken area */
+/* check chicken FIRST */
+
+let nearChicken=false;
+
+chickens.forEach((chicken,i)=>{
+
+let r=chicken.getBoundingClientRect();
+
+let cx=r.left+r.width/2;
+
+let cy=r.top+r.height/2;
+
+let ex=e.x+SIZE/2;
+
+let ey=e.y+SIZE/2;
+
+let d=Math.hypot(cx-ex,cy-ey);
+
+if(d<100 && e.color===i){
+
+nearChicken=true;
+
+}
+
+});
+
+/* only collide if NOT near chicken */
+
+if(!nearChicken){
 
 for(let other of eggs){
 
@@ -405,7 +426,7 @@ let dy=other.y-e.y;
 
 let dist=Math.hypot(dx,dy);
 
-if(dist<SIZE*0.9){
+if(dist<SIZE){
 
 let push=(SIZE-dist);
 
@@ -416,6 +437,8 @@ let ny=dy/dist;
 other.x+=nx*push;
 
 other.y+=ny*push;
+
+}
 
 }
 
@@ -433,7 +456,7 @@ check(e);
 
 });
 
-/* check */
+/* drop */
 
 function check(e){
 
@@ -453,7 +476,7 @@ let ey=er.top+er.height/2;
 
 let d=Math.hypot(cx-ex,cy-ey);
 
-if(d<90){
+if(d<100){
 
 if(e.color===i){
 
