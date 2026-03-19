@@ -3,7 +3,7 @@
 
 <head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap" rel="stylesheet">
 
@@ -59,13 +59,11 @@ position:absolute;
 
 top:120px;
 
-height:60%;
+height:55%;
 
 width:100%;
 
 }
-
-/* EGGS */
 
 .egg{
 
@@ -73,9 +71,9 @@ position:absolute;
 
 border-radius:50%;
 
-touch-action:none;
-
 cursor:pointer;
+
+touch-action:none;
 
 transition:.12s;
 
@@ -83,15 +81,11 @@ overflow:hidden;
 
 }
 
-/* TAP EFFECT */
-
 .egg:active{
 
 transform:scale(1.1);
 
 }
-
-/* EGG SHADING */
 
 .egg::before{
 
@@ -111,7 +105,7 @@ to bottom,
 
 rgba(255,255,255,.3),
 
-rgba(0,0,0,.08)
+rgba(0,0,0,.1)
 
 );
 
@@ -139,13 +133,11 @@ background:rgba(255,255,255,.35);
 
 }
 
-/* CHICKENS */
-
 .chickens{
 
 position:absolute;
 
-bottom:20px;
+bottom:70px;
 
 width:100%;
 
@@ -245,7 +237,33 @@ transition:.5s;
 
 }
 
-/* CONFETTI */
+#restart{
+
+position:absolute;
+
+bottom:10px;
+
+left:50%;
+
+transform:translateX(-50%);
+
+background:#6FB072;
+
+color:white;
+
+border:none;
+
+padding:12px 25px;
+
+font-size:20px;
+
+border-radius:15px;
+
+display:none;
+
+cursor:pointer;
+
+}
 
 canvas{
 
@@ -285,42 +303,19 @@ LA GRANJA<br>DE IAN
 
 <div class="chickens">
 
-<div class="chicken">
-<div class="body" style="background:#E06A6A"></div>
-<div class="eye left"><div class="pupil"></div></div>
-<div class="eye right"><div class="pupil"></div></div>
-<div class="beak"></div>
-</div>
+<div class="chicken"><div class="body" style="background:#E06A6A"></div><div class="eye left"><div class="pupil"></div></div><div class="eye right"><div class="pupil"></div></div><div class="beak"></div></div>
 
-<div class="chicken">
-<div class="body" style="background:#5FA0D3"></div>
-<div class="eye left"><div class="pupil"></div></div>
-<div class="eye right"><div class="pupil"></div></div>
-<div class="beak"></div>
-</div>
+<div class="chicken"><div class="body" style="background:#5FA0D3"></div><div class="eye left"><div class="pupil"></div></div><div class="eye right"><div class="pupil"></div></div><div class="beak"></div></div>
 
-<div class="chicken">
-<div class="body" style="background:#7CB77A"></div>
-<div class="eye left"><div class="pupil"></div></div>
-<div class="eye right"><div class="pupil"></div></div>
-<div class="beak"></div>
-</div>
+<div class="chicken"><div class="body" style="background:#7CB77A"></div><div class="eye left"><div class="pupil"></div></div><div class="eye right"><div class="pupil"></div></div><div class="beak"></div></div>
 
-<div class="chicken">
-<div class="body" style="background:#F1CC4B"></div>
-<div class="eye left"><div class="pupil"></div></div>
-<div class="eye right"><div class="pupil"></div></div>
-<div class="beak"></div>
-</div>
+<div class="chicken"><div class="body" style="background:#F1CC4B"></div><div class="eye left"><div class="pupil"></div></div><div class="eye right"><div class="pupil"></div></div><div class="beak"></div></div>
 
-<div class="chicken">
-<div class="body" style="background:#F4AD42"></div>
-<div class="eye left"><div class="pupil"></div></div>
-<div class="eye right"><div class="pupil"></div></div>
-<div class="beak"></div>
-</div>
+<div class="chicken"><div class="body" style="background:#F4AD42"></div><div class="eye left"><div class="pupil"></div></div><div class="eye right"><div class="pupil"></div></div><div class="beak"></div></div>
 
 </div>
+
+<button id="restart">REINICIAR</button>
 
 </div>
 
@@ -331,6 +326,8 @@ window.onload=()=>{
 const stage=document.getElementById("stage");
 
 const win=document.getElementById("win");
+
+const restart=document.getElementById("restart");
 
 const chickens=document.querySelectorAll(".chicken");
 
@@ -360,7 +357,7 @@ let z=1;
 
 const SIZE=95;
 
-/* SPAWN */
+/* spawn */
 
 colors.forEach((color,c)=>{
 
@@ -375,7 +372,7 @@ while(!placed){
 
 let w=stage.offsetWidth-SIZE;
 
-let h=stage.offsetHeight-20;
+let h=stage.offsetHeight;
 
 x=Math.random()*w;
 
@@ -391,7 +388,7 @@ let dy=y-other.y;
 
 let dist=Math.hypot(dx,dy);
 
-if(dist<SIZE*1.1){
+if(dist<SIZE){
 
 placed=false;
 
@@ -423,8 +420,6 @@ x,
 
 y,
 
-drag:false,
-
 locked:false
 
 });
@@ -433,7 +428,7 @@ locked:false
 
 });
 
-/* DRAG */
+/* drag */
 
 eggs.forEach(e=>{
 
@@ -443,8 +438,6 @@ let oy;
 e.el.onpointerdown=ev=>{
 
 if(e.locked)return;
-
-e.drag=true;
 
 z++;
 
@@ -458,6 +451,8 @@ ox=ev.clientX-r.left;
 
 oy=ev.clientY-r.top;
 
+e.drag=true;
+
 };
 
 e.el.onpointermove=ev=>{
@@ -469,17 +464,6 @@ let rect=stage.getBoundingClientRect();
 e.x=ev.clientX-rect.left-ox;
 
 e.y=ev.clientY-rect.top-oy;
-
-if(e.x<0)e.x=0;
-if(e.y<0)e.y=0;
-
-if(e.x>stage.offsetWidth-SIZE)
-e.x=stage.offsetWidth-SIZE;
-
-let maxY=stage.offsetHeight+120;
-
-if(e.y>maxY)
-e.y=maxY;
 
 };
 
@@ -495,7 +479,7 @@ check(e);
 
 });
 
-/* CONFETTI */
+/* confetti */
 
 let particles=[];
 
@@ -509,9 +493,9 @@ x:Math.random()*canvas.width,
 
 y:-20,
 
-size:6+Math.random()*6,
+size:6,
 
-speed:2+Math.random()*3,
+speed:2+Math.random()*2,
 
 color:colors[Math.floor(Math.random()*5)]
 
@@ -539,9 +523,11 @@ requestAnimationFrame(draw);
 
 }
 
-/* DROP */
+/* drop */
 
 function check(e){
+
+if(e.locked)return;
 
 chickens.forEach((chicken,i)=>{
 
@@ -559,9 +545,7 @@ let ey=er.top+er.height/2;
 
 let d=Math.hypot(cx-ex,cy-ey);
 
-if(d<140){
-
-if(e.color===i){
+if(d<140 && e.color===i){
 
 e.locked=true;
 
@@ -577,7 +561,7 @@ confetti();
 
 draw();
 
-}
+restart.style.display="block";
 
 }
 
@@ -587,7 +571,15 @@ draw();
 
 }
 
-/* RENDER */
+/* restart */
+
+restart.onclick=()=>{
+
+location.reload();
+
+}
+
+/* render */
 
 function render(){
 
