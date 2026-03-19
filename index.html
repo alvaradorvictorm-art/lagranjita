@@ -12,9 +12,7 @@
 body{
 
 margin:0;
-
 background:#C48A5A;
-
 font-family:'Baloo 2';
 
 }
@@ -24,17 +22,11 @@ font-family:'Baloo 2';
 .screen{
 
 width:100vw;
-
 max-width:520px;
-
 height:100vh;
-
 margin:auto;
-
 position:relative;
-
 display:none;
-
 background:#C48A5A;
 
 }
@@ -44,7 +36,6 @@ background:#C48A5A;
 #menu{
 
 display:block;
-
 text-align:center;
 
 }
@@ -52,19 +43,12 @@ text-align:center;
 .title{
 
 background:#E8E2CC;
-
 color:#6FB072;
-
 width:85%;
-
-margin:25px auto;
-
-padding:15px;
-
+margin:20px auto;
+padding:18px;
 border-radius:25px;
-
-font-size:45px;
-
+font-size:42px;
 line-height:1;
 
 }
@@ -72,23 +56,14 @@ line-height:1;
 .card{
 
 background:#E8E2CC;
-
-width:70%;
-
+width:75%;
 height:150px;
-
-margin:20px auto;
-
+margin:18px auto;
 border-radius:30px;
-
 display:flex;
-
 align-items:center;
-
 justify-content:center;
-
 font-size:90px;
-
 cursor:pointer;
 
 }
@@ -98,15 +73,10 @@ cursor:pointer;
 .playarea{
 
 background:#E8E2CC;
-
-width:90%;
-
-height:60%;
-
-margin:auto;
-
-border-radius:30px;
-
+width:88%;
+height:68%;
+margin:15px auto;
+border-radius:28px;
 position:relative;
 
 }
@@ -114,10 +84,8 @@ position:relative;
 .stage{
 
 position:absolute;
-
 width:100%;
-
-height:100%;
+height:80%;
 
 }
 
@@ -126,34 +94,21 @@ height:100%;
 .targets{
 
 position:absolute;
-
-bottom:-80px;
-
+bottom:10px;
 width:100%;
-
 display:flex;
-
-justify-content:space-around;
+justify-content:space-evenly;
 
 }
 
 .target{
 
-width:65px;
-
-height:65px;
-
-border-radius:50%;
-
+width:60px;
+height:60px;
 display:flex;
-
 align-items:center;
-
 justify-content:center;
-
-color:white;
-
-font-size:30px;
+font-size:38px;
 
 }
 
@@ -163,7 +118,10 @@ font-size:30px;
 
 position:absolute;
 
-border-radius:50%;
+width:75px;
+height:95px;
+
+border-radius:50% 50% 45% 45%;
 
 cursor:pointer;
 
@@ -173,7 +131,7 @@ align-items:center;
 
 justify-content:center;
 
-font-size:40px;
+font-size:38px;
 
 color:white;
 
@@ -183,9 +141,15 @@ transition:.1s;
 
 }
 
+.egg span{
+
+transform:translateY(-2px);
+
+}
+
 .egg:active{
 
-transform:scale(1.1);
+transform:scale(1.05);
 
 }
 
@@ -193,17 +157,13 @@ transform:scale(1.1);
 
 .controls{
 
-position:absolute;
+width:88%;
 
-bottom:15px;
-
-width:100%;
+margin:15px auto;
 
 display:flex;
 
-justify-content:center;
-
-gap:20px;
+justify-content:space-between;
 
 }
 
@@ -215,11 +175,11 @@ color:#6FB072;
 
 border:none;
 
-padding:10px 25px;
+padding:14px 32px;
 
-font-size:24px;
+font-size:22px;
 
-border-radius:15px;
+border-radius:14px;
 
 cursor:pointer;
 
@@ -283,7 +243,7 @@ LA GRANJA DE IAN
 
 <div class="controls">
 
-<button onclick="backMenu()">ATRÁS</button>
+<button onclick="backMenu()">ATRAS</button>
 
 <button onclick="resetGame()">REINICIAR</button>
 
@@ -311,7 +271,7 @@ LA GRANJA DE IAN
 
 <div class="controls">
 
-<button onclick="backMenu()">ATRÁS</button>
+<button onclick="backMenu()">ATRAS</button>
 
 <button onclick="resetGame()">REINICIAR</button>
 
@@ -339,7 +299,7 @@ LA GRANJA DE IAN
 
 <div class="controls">
 
-<button onclick="backMenu()">ATRÁS</button>
+<button onclick="backMenu()">ATRAS</button>
 
 <button onclick="resetGame()">REINICIAR</button>
 
@@ -353,7 +313,7 @@ let currentGame;
 
 let eggs=[];
 
-let SIZE=90;
+let SIZE=75;
 
 let colors=[
 
@@ -415,9 +375,7 @@ let t=document.createElement("div");
 
 t.className="target";
 
-t.style.background=colors[i];
-
-t.innerText=symbol;
+t.innerHTML="🐥";
 
 targets.appendChild(t);
 
@@ -458,9 +416,9 @@ el.style.background=colors[i];
 
 el.style.width=SIZE+"px";
 
-el.style.height=(SIZE*1.2)+"px";
+el.style.height=(SIZE*1.25)+"px";
 
-el.innerText=symbol;
+el.innerHTML="<span>"+symbol+"</span>";
 
 stage.appendChild(el);
 
@@ -551,7 +509,7 @@ let d=Math.hypot(
 
 );
 
-if(d<120 && e.color===i){
+if(d<110 && e.color===i){
 
 e.locked=true;
 
