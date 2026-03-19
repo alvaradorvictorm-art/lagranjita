@@ -5,37 +5,41 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&display=swap" rel="stylesheet">
 
 <style>
 
 body{
 
 margin:0;
+
 background:#C48A5A;
+
 font-family:'Baloo 2';
 
 }
 
+/* SCREENS */
+
 .screen{
 
 width:100vw;
-max-width:520px;
-height:100vh;
 
-background:#E8E2CC;
+max-width:520px;
+
+height:100vh;
 
 margin:auto;
 
-border-radius:30px;
-
 position:relative;
-
-overflow:hidden;
 
 display:none;
 
+background:#C48A5A;
+
 }
+
+/* MENU */
 
 #menu{
 
@@ -43,29 +47,67 @@ display:block;
 
 text-align:center;
 
-padding-top:80px;
-
 }
 
-button{
+.title{
 
-background:#6FB072;
+background:#E8E2CC;
 
-color:white;
+color:#6FB072;
 
-border:none;
+width:85%;
+
+margin:25px auto;
 
 padding:15px;
 
-margin:10px;
+border-radius:25px;
 
-font-size:22px;
+font-size:45px;
 
-border-radius:15px;
+line-height:1;
+
+}
+
+.card{
+
+background:#E8E2CC;
+
+width:70%;
+
+height:150px;
+
+margin:20px auto;
+
+border-radius:30px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:90px;
 
 cursor:pointer;
 
-width:200px;
+}
+
+/* PLAY AREA */
+
+.playarea{
+
+background:#E8E2CC;
+
+width:90%;
+
+height:60%;
+
+margin:auto;
+
+border-radius:30px;
+
+position:relative;
 
 }
 
@@ -73,13 +115,49 @@ width:200px;
 
 position:absolute;
 
-top:120px;
+width:100%;
 
-height:55%;
+height:100%;
+
+}
+
+/* TARGETS */
+
+.targets{
+
+position:absolute;
+
+bottom:-80px;
 
 width:100%;
 
+display:flex;
+
+justify-content:space-around;
+
 }
+
+.target{
+
+width:65px;
+
+height:65px;
+
+border-radius:50%;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+color:white;
+
+font-size:30px;
+
+}
+
+/* EGGS */
 
 .egg{
 
@@ -88,8 +166,6 @@ position:absolute;
 border-radius:50%;
 
 cursor:pointer;
-
-transition:.12s;
 
 display:flex;
 
@@ -103,6 +179,8 @@ color:white;
 
 font-weight:bold;
 
+transition:.1s;
+
 }
 
 .egg:active{
@@ -111,50 +189,41 @@ transform:scale(1.1);
 
 }
 
-.chickens{
-
-position:absolute;
-
-bottom:80px;
-
-width:100%;
-
-display:flex;
-
-justify-content:space-around;
-
-font-size:30px;
-
-}
-
-.target{
-
-width:70px;
-height:70px;
-
-border-radius:50%;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-color:white;
-
-font-size:32px;
-
-}
+/* BUTTONS */
 
 .controls{
 
 position:absolute;
 
-bottom:10px;
+bottom:15px;
 
 width:100%;
 
-text-align:center;
+display:flex;
+
+justify-content:center;
+
+gap:20px;
+
+}
+
+button{
+
+background:#E8E2CC;
+
+color:#6FB072;
+
+border:none;
+
+padding:10px 25px;
+
+font-size:24px;
+
+border-radius:15px;
+
+cursor:pointer;
+
+font-weight:bold;
 
 }
 
@@ -164,61 +233,115 @@ text-align:center;
 
 <body>
 
+<!-- MENU -->
+
 <div id="menu" class="screen">
 
-<h1>JUEGOS</h1>
+<div class="title">
 
-<button onclick="openGame('animals')">ANIMALES</button>
-
-<button onclick="openGame('numbers')">NÚMEROS</button>
-
-<button onclick="openGame('vowels')">VOCALES</button>
+LA GRANJA<br>DE IAN
 
 </div>
+
+<div class="card" onclick="openGame('vowels')">
+
+<span style="color:#E06A6A">A</span>
+
+</div>
+
+<div class="card" onclick="openGame('numbers')">
+
+<span style="color:#5FA0D3">1</span>
+
+</div>
+
+<div class="card" onclick="openGame('animals')">
+
+🐥
+
+</div>
+
+</div>
+
+<!-- ANIMALS -->
 
 <div id="animals" class="screen">
 
+<div class="title">
+
+LA GRANJA DE IAN
+
+</div>
+
+<div class="playarea">
+
 <div class="stage"></div>
 
-<div class="chickens"></div>
+<div class="targets"></div>
+
+</div>
 
 <div class="controls">
 
-<button onclick="resetGame()">REINICIAR</button>
-
 <button onclick="backMenu()">ATRÁS</button>
 
+<button onclick="resetGame()">REINICIAR</button>
+
 </div>
 
 </div>
+
+<!-- NUMBERS -->
 
 <div id="numbers" class="screen">
 
+<div class="title">
+
+LA GRANJA DE IAN
+
+</div>
+
+<div class="playarea">
+
 <div class="stage"></div>
 
-<div class="chickens"></div>
+<div class="targets"></div>
+
+</div>
 
 <div class="controls">
 
-<button onclick="resetGame()">REINICIAR</button>
-
 <button onclick="backMenu()">ATRÁS</button>
 
+<button onclick="resetGame()">REINICIAR</button>
+
 </div>
 
 </div>
+
+<!-- VOWELS -->
 
 <div id="vowels" class="screen">
 
+<div class="title">
+
+LA GRANJA DE IAN
+
+</div>
+
+<div class="playarea">
+
 <div class="stage"></div>
 
-<div class="chickens"></div>
+<div class="targets"></div>
+
+</div>
 
 <div class="controls">
 
-<button onclick="resetGame()">REINICIAR</button>
-
 <button onclick="backMenu()">ATRÁS</button>
+
+<button onclick="resetGame()">REINICIAR</button>
 
 </div>
 
@@ -226,13 +349,11 @@ text-align:center;
 
 <script>
 
-let currentGame=null;
+let currentGame;
 
 let eggs=[];
 
-let complete=0;
-
-let SIZE=95;
+let SIZE=90;
 
 let colors=[
 
@@ -246,7 +367,7 @@ let colors=[
 
 let sets={
 
-animals:["🥚","🥚","🥚","🥚","🥚"],
+animals:["","","","",""],
 
 numbers:["1","2","3","4","5"],
 
@@ -280,15 +401,13 @@ let screen=document.getElementById(type);
 
 let stage=screen.querySelector(".stage");
 
-let targets=screen.querySelector(".chickens");
+let targets=screen.querySelector(".targets");
 
 stage.innerHTML="";
 
 targets.innerHTML="";
 
 eggs=[];
-
-complete=0;
 
 sets[type].forEach((symbol,i)=>{
 
@@ -313,7 +432,7 @@ while(!placed){
 
 x=Math.random()*(stage.offsetWidth-SIZE);
 
-y=Math.random()*(stage.offsetHeight);
+y=Math.random()*(stage.offsetHeight-SIZE);
 
 placed=true;
 
@@ -432,11 +551,9 @@ let d=Math.hypot(
 
 );
 
-if(d<140 && e.color===i){
+if(d<120 && e.color===i){
 
 e.locked=true;
-
-complete++;
 
 e.el.style.opacity=0;
 
