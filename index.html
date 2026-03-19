@@ -241,6 +241,8 @@ LA GRANJA<br>DE IAN
 
 <script>
 
+window.onload=()=>{
+
 const stage=document.getElementById("stage");
 
 const win=document.getElementById("win");
@@ -265,6 +267,8 @@ let z=1;
 
 const SIZE=95;
 
+/* spawn */
+
 colors.forEach((color,c)=>{
 
 for(let i=0;i<3;i++){
@@ -276,9 +280,9 @@ let y;
 
 while(!placed){
 
-let w=stage.clientWidth-SIZE;
+let w=stage.offsetWidth-SIZE;
 
-let h=stage.clientHeight-20;
+let h=stage.offsetHeight-20;
 
 x=Math.random()*w;
 
@@ -336,6 +340,8 @@ locked:false
 
 });
 
+/* drag */
+
 eggs.forEach(e=>{
 
 let ox;
@@ -371,28 +377,67 @@ e.x=ev.clientX-rect.left-ox;
 
 e.y=ev.clientY-rect.top-oy;
 
+/* bounds */
+
 if(e.x<0)e.x=0;
 if(e.y<0)e.y=0;
 
-if(e.x>stage.clientWidth-SIZE)
-e.x=stage.clientWidth-SIZE;
+if(e.x>stage.offsetWidth-SIZE)
+e.x=stage.offsetWidth-SIZE;
 
-let maxY=stage.clientHeight+120;
+let maxY=stage.offsetHeight+120;
 
 if(e.y>maxY)
 e.y=maxY;
 
+/* push others */
+
+for(let other of eggs){
+
+if(other===e || other.locked)continue;
+
+let dx=other.x-e.x;
+
+let dy=other.y-e.y;
+
+let dist=Math.hypot(dx,dy);
+
+if(dist<SIZE){
+
+let push=(SIZE-dist);
+
+let nx=dx/dist || 0;
+
+let ny=dy/dist || 0;
+
+other.x+=nx*push;
+
+other.y+=ny*push;
+
+/* keep them inside */
+
+other.x=Math.max(0,Math.min(other.x,stage.offsetWidth-SIZE));
+other.y=Math.max(0,Math.min(other.y,maxY));
+
+}
+
+}
+
 };
 
-e.el.onpointerup=()=>{
+e.el.onpointerup=ev=>{
 
 e.drag=false;
+
+e.el.releasePointerCapture(ev.pointerId);
 
 check(e);
 
 };
 
 });
+
+/* drop */
 
 function check(e){
 
@@ -436,6 +481,8 @@ win.style.opacity=1;
 
 }
 
+/* render */
+
 function render(){
 
 eggs.forEach(e=>{
@@ -451,6 +498,8 @@ requestAnimationFrame(render);
 }
 
 render();
+
+}
 
 </script>
 
