@@ -70,7 +70,19 @@ border-radius:50%;
 
 touch-action:none;
 
-transition:.15s;
+cursor:pointer;
+
+animation:pop .4s ease;
+
+}
+
+@keyframes pop{
+
+0%{transform:scale(.6)}
+
+60%{transform:scale(1.1)}
+
+100%{transform:scale(1)}
 
 }
 
@@ -267,7 +279,9 @@ const colors=[
 
 ];
 
-const sizes=[28,34,40,46,52];
+/* 3 eggs per color */
+
+const sizes=[32,42,52];
 
 const eggs=[];
 
@@ -286,11 +300,11 @@ h:stage.clientHeight
 
 }
 
-/* SPAWN WITHOUT OVERLAP */
+/* SPAWN */
 
 colors.forEach((color,c)=>{
 
-for(let i=0;i<5;i++){
+for(let i=0;i<3;i++){
 
 let size=sizes[i];
 
@@ -299,9 +313,7 @@ let placed=false;
 let x;
 let y;
 
-let tries=0;
-
-while(!placed && tries<200){
+while(!placed){
 
 let s=stageSize();
 
@@ -309,266 +321,4 @@ x=Math.random()*(s.w-size);
 
 y=Math.random()*(s.h-size);
 
-placed=true;
-
-for(let other of eggs){
-
-let dx=x-other.x;
-
-let dy=y-other.y;
-
-let dist=Math.hypot(dx,dy);
-
-let min=(size+other.size)*.6;
-
-if(dist<min){
-
-placed=false;
-
-}
-
-}
-
-tries++;
-
-}
-
-let el=document.createElement("div");
-
-el.className="egg";
-
-el.style.background=color;
-
-el.style.width=size+"px";
-
-el.style.height=(size*1.25)+"px";
-
-stage.appendChild(el);
-
-eggs.push({
-
-el,
-
-color:c,
-
-x,
-
-y,
-
-size,
-
-vx:(Math.random()-.5)*.15,
-
-vy:(Math.random()-.5)*.15,
-
-drag:false,
-
-locked:false
-
-});
-
-}
-
-});
-
-/* DRAG */
-
-eggs.forEach(e=>{
-
-let ox;
-
-let oy;
-
-e.el.onpointerdown=ev=>{
-
-if(e.locked)return;
-
-e.drag=true;
-
-z++;
-
-e.el.style.zIndex=z;
-
-let r=e.el.getBoundingClientRect();
-
-ox=ev.clientX-r.left;
-
-oy=ev.clientY-r.top;
-
-};
-
-e.el.onpointermove=ev=>{
-
-if(!e.drag)return;
-
-let rect=stage.getBoundingClientRect();
-
-e.x=ev.clientX-rect.left-ox;
-
-e.y=ev.clientY-rect.top-oy;
-
-};
-
-e.el.onpointerup=()=>{
-
-e.drag=false;
-
-check(e);
-
-};
-
-});
-
-/* CHECK */
-
-function check(e){
-
-chickens.forEach((chicken,i)=>{
-
-let r=chicken.getBoundingClientRect();
-
-let er=e.el.getBoundingClientRect();
-
-let cx=r.left+r.width/2;
-
-let cy=r.top+r.height/2;
-
-let ex=er.left+er.width/2;
-
-let ey=er.top+er.height/2;
-
-let d=Math.hypot(cx-ex,cy-ey);
-
-if(d<80){
-
-if(e.color===i){
-
-e.locked=true;
-
-complete++;
-
-e.el.style.opacity=0;
-
-if(complete===25){
-
-win.style.opacity=1;
-
-}
-
-}
-
-}
-
-});
-
-}
-
-/* PHYSICS */
-
-function physics(){
-
-let s=stageSize();
-
-for(let e of eggs){
-
-if(e.drag || e.locked)continue;
-
-e.vx+=(Math.random()-.5)*0.004;
-
-e.vy+=(Math.random()-.5)*0.004;
-
-e.vx*=0.995;
-
-e.vy*=0.995;
-
-let max=.12;
-
-e.vx=Math.max(-max,Math.min(max,e.vx));
-
-e.vy=Math.max(-max,Math.min(max,e.vy));
-
-e.x+=e.vx;
-
-e.y+=e.vy;
-
-/* BOUNDS */
-
-if(e.x<0)e.x=0;
-
-if(e.x>s.w-e.size)e.x=s.w-e.size;
-
-if(e.y<0)e.y=0;
-
-if(e.y>s.h-e.size)e.y=s.h-e.size;
-
-}
-
-/* SOLID COLLISION */
-
-for(let i=0;i<eggs.length;i++){
-
-for(let j=i+1;j<eggs.length;j++){
-
-let a=eggs[i];
-
-let b=eggs[j];
-
-if(a.locked||b.locked)continue;
-
-let dx=b.x-a.x;
-
-let dy=b.y-a.y;
-
-let dist=Math.hypot(dx,dy);
-
-let min=(a.size+b.size)*.5;
-
-if(dist<min){
-
-let push=(min-dist)*.15;
-
-let nx=dx/dist;
-
-let ny=dy/dist;
-
-a.x-=nx*push;
-
-a.y-=ny*push;
-
-b.x+=nx*push;
-
-b.y+=ny*push;
-
-}
-
-}
-
-}
-
-}
-
-/* RENDER */
-
-function render(){
-
-physics();
-
-eggs.forEach(e=>{
-
-e.el.style.transform=
-
-`translate(${e.x}px,${e.y}px)`;
-
-});
-
-requestAnimationFrame(render);
-
-}
-
-render();
-
-</script>
-
-</body>
-
-</html>
+placed
