@@ -263,8 +263,6 @@ let complete=0;
 
 let z=1;
 
-/* 50% bigger again */
-
 const SIZE=95;
 
 colors.forEach((color,c)=>{
@@ -280,7 +278,7 @@ while(!placed){
 
 let w=stage.clientWidth-SIZE;
 
-let h=stage.clientHeight-SIZE;
+let h=stage.clientHeight-20;
 
 x=Math.random()*w;
 
@@ -338,8 +336,6 @@ locked:false
 
 });
 
-/* drag */
-
 eggs.forEach(e=>{
 
 let ox;
@@ -375,74 +371,16 @@ e.x=ev.clientX-rect.left-ox;
 
 e.y=ev.clientY-rect.top-oy;
 
-/* bounds */
-
 if(e.x<0)e.x=0;
 if(e.y<0)e.y=0;
 
 if(e.x>stage.clientWidth-SIZE)
 e.x=stage.clientWidth-SIZE;
 
-if(e.y>stage.clientHeight-SIZE)
-e.y=stage.clientHeight-SIZE;
+let maxY=stage.clientHeight+120;
 
-/* check chicken FIRST */
-
-let nearChicken=false;
-
-chickens.forEach((chicken,i)=>{
-
-let r=chicken.getBoundingClientRect();
-
-let cx=r.left+r.width/2;
-
-let cy=r.top+r.height/2;
-
-let ex=e.x+SIZE/2;
-
-let ey=e.y+SIZE/2;
-
-let d=Math.hypot(cx-ex,cy-ey);
-
-if(d<100 && e.color===i){
-
-nearChicken=true;
-
-}
-
-});
-
-/* only collide if NOT near chicken */
-
-if(!nearChicken){
-
-for(let other of eggs){
-
-if(other===e || other.locked)continue;
-
-let dx=other.x-e.x;
-
-let dy=other.y-e.y;
-
-let dist=Math.hypot(dx,dy);
-
-if(dist<SIZE){
-
-let push=(SIZE-dist);
-
-let nx=dx/dist;
-
-let ny=dy/dist;
-
-other.x+=nx*push;
-
-other.y+=ny*push;
-
-}
-
-}
-
-}
+if(e.y>maxY)
+e.y=maxY;
 
 };
 
@@ -455,8 +393,6 @@ check(e);
 };
 
 });
-
-/* drop */
 
 function check(e){
 
@@ -476,7 +412,7 @@ let ey=er.top+er.height/2;
 
 let d=Math.hypot(cx-ex,cy-ey);
 
-if(d<100){
+if(d<140){
 
 if(e.color===i){
 
@@ -499,8 +435,6 @@ win.style.opacity=1;
 });
 
 }
-
-/* render */
 
 function render(){
 
