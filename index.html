@@ -10,32 +10,27 @@
 <style>
 
 body{
-
 margin:0;
 background:#C48A5A;
 display:flex;
 justify-content:center;
 font-family:'Baloo 2';
-overflow:hidden;
-
 }
 
 .game{
-
 width:100vw;
 max-width:520px;
 height:100vh;
-
-position:relative;
 
 background:#E8E2CC;
 
 border-radius:30px;
 
+position:relative;
+
 overflow:hidden;
 
 margin-top:10px;
-
 }
 
 .title{
@@ -72,17 +67,7 @@ touch-action:none;
 
 cursor:pointer;
 
-animation:pop .4s ease;
-
-}
-
-@keyframes pop{
-
-0%{transform:scale(.6)}
-
-60%{transform:scale(1.1)}
-
-100%{transform:scale(1)}
+transition:.15s;
 
 }
 
@@ -279,34 +264,19 @@ const colors=[
 
 ];
 
-/* 3 eggs per color */
-
-const sizes=[32,42,52];
-
 const eggs=[];
 
 let complete=0;
 
 let z=1;
 
-function stageSize(){
+const SIZE=42;
 
-return{
-
-w:stage.clientWidth,
-h:stage.clientHeight
-
-};
-
-}
-
-/* SPAWN */
+/* spawn separated */
 
 colors.forEach((color,c)=>{
 
 for(let i=0;i<3;i++){
-
-let size=sizes[i];
 
 let placed=false;
 
@@ -315,10 +285,218 @@ let y;
 
 while(!placed){
 
-let s=stageSize();
+let w=stage.clientWidth-SIZE;
 
-x=Math.random()*(s.w-size);
+let h=stage.clientHeight-SIZE;
 
-y=Math.random()*(s.h-size);
+x=Math.random()*w;
 
-placed
+y=Math.random()*h;
+
+placed=true;
+
+for(let other of eggs){
+
+let dx=x-other.x;
+
+let dy=y-other.y;
+
+let dist=Math.hypot(dx,dy);
+
+if(dist<SIZE*1.2){
+
+placed=false;
+
+}
+
+}
+
+}
+
+let el=document.createElement("div");
+
+el.className="egg";
+
+el.style.background=color;
+
+el.style.width=SIZE+"px";
+
+el.style.height=(SIZE*1.2)+"px";
+
+stage.appendChild(el);
+
+eggs.push({
+
+el,
+
+color:c,
+
+x,
+
+y,
+
+drag:false,
+
+locked:false
+
+});
+
+}
+
+});
+
+/* drag */
+
+eggs.forEach(e=>{
+
+let ox;
+
+let oy;
+
+e.el.onpointerdown=ev=>{
+
+if(e.locked)return;
+
+e.drag=true;
+
+z++;
+
+e.el.style.zIndex=z;
+
+e.el.setPointerCapture(ev.pointerId);
+
+let r=e.el.getBoundingClientRect();
+
+ox=ev.clientX-r.left;
+
+oy=ev.clientY-r.top;
+
+};
+
+e.el.onpointermove=ev=>{
+
+if(!e.drag)return;
+
+let rect=stage.getBoundingClientRect();
+
+e.x=ev.clientX-rect.left-ox;
+
+e.y=ev.clientY-rect.top-oy;
+
+/* bounds */
+
+if(e.x<0)e.x=0;
+
+if(e.y<0)e.y=0;
+
+if(e.x>stage.clientWidth-SIZE)e.x=stage.clientWidth-SIZE;
+
+if(e.y>stage.clientHeight-SIZE)e.y=stage.clientHeight-SIZE;
+
+/* push others */
+
+for(let other of eggs){
+
+if(other===e || other.locked)continue;
+
+let dx=other.x-e.x;
+
+let dy=other.y-e.y;
+
+let dist=Math.hypot(dx,dy);
+
+if(dist<SIZE){
+
+let push=(SIZE-dist);
+
+let nx=dx/dist;
+
+let ny=dy/dist;
+
+other.x+=nx*push;
+
+other.y+=ny*push;
+
+}
+
+}
+
+};
+
+e.el.onpointerup=()=>{
+
+e.drag=false;
+
+check(e);
+
+};
+
+});
+
+/* check */
+
+function check(e){
+
+chickens.forEach((chicken,i)=>{
+
+let r=chicken.getBoundingClientRect();
+
+let er=e.el.getBoundingClientRect();
+
+let cx=r.left+r.width/2;
+
+let cy=r.top+r.height/2;
+
+let ex=er.left+er.width/2;
+
+let ey=er.top+er.height/2;
+
+let d=Math.hypot(cx-ex,cy-ey);
+
+if(d<70){
+
+if(e.color===i){
+
+e.locked=true;
+
+complete++;
+
+e.el.style.opacity=0;
+
+if(complete===15){
+
+win.style.opacity=1;
+
+}
+
+}
+
+}
+
+});
+
+}
+
+/* render */
+
+function render(){
+
+eggs.forEach(e=>{
+
+e.el.style.transform=
+
+`translate(${e.x}px,${e.y}px)`;
+
+});
+
+requestAnimationFrame(render);
+
+}
+
+render();
+
+</script>
+
+</body>
+
+</html>
