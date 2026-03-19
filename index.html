@@ -10,25 +10,17 @@
 <style>
 
 body{
-
 margin:0;
-
 background:#C48A5A;
-
 display:flex;
-
 justify-content:center;
-
 font-family:'Baloo 2';
-
 }
 
 .game{
 
 width:100vw;
-
 max-width:520px;
-
 height:100vh;
 
 background:#E8E2CC;
@@ -100,13 +92,9 @@ height:100%;
 border-radius:50%;
 
 background:linear-gradient(
-
 to bottom,
-
 rgba(255,255,255,.3),
-
 rgba(0,0,0,.1)
-
 );
 
 opacity:.3;
@@ -137,7 +125,7 @@ background:rgba(255,255,255,.35);
 
 position:absolute;
 
-bottom:80px;
+bottom:70px;
 
 width:100%;
 
@@ -184,7 +172,6 @@ top:18px;
 }
 
 .eye.left{left:14px;}
-
 .eye.right{right:14px;}
 
 .pupil{
@@ -203,7 +190,6 @@ margin:3px;
 .beak{
 
 width:0;
-
 height:0;
 
 border-left:10px solid transparent;
@@ -219,24 +205,6 @@ left:22px;
 
 }
 
-.win{
-
-position:absolute;
-
-top:45%;
-
-width:100%;
-
-text-align:center;
-
-font-size:70px;
-
-opacity:0;
-
-transition:.5s;
-
-}
-
 /* BOTON */
 
 #restart{
@@ -244,6 +212,8 @@ transition:.5s;
 position:absolute;
 
 bottom:10px;
+
+width:160px;
 
 left:50%;
 
@@ -255,7 +225,7 @@ color:white;
 
 border:none;
 
-padding:12px 25px;
+padding:12px;
 
 font-size:20px;
 
@@ -270,7 +240,6 @@ canvas{
 position:absolute;
 
 top:0;
-
 left:0;
 
 pointer-events:none;
@@ -292,12 +261,6 @@ LA GRANJA<br>DE IAN
 </div>
 
 <div class="stage" id="stage"></div>
-
-<div class="win" id="win">
-
-🎉👏🎉
-
-</div>
 
 <canvas id="confetti"></canvas>
 
@@ -325,8 +288,6 @@ window.onload=()=>{
 
 const stage=document.getElementById("stage");
 
-const win=document.getElementById("win");
-
 const restart=document.getElementById("restart");
 
 const chickens=document.querySelectorAll(".chicken");
@@ -349,7 +310,7 @@ const colors=[
 
 ];
 
-const eggs=[];
+let eggs=[];
 
 let complete=0;
 
@@ -357,7 +318,15 @@ let z=1;
 
 const SIZE=95;
 
-/* spawn */
+/* CREATE EGGS */
+
+function createEggs(){
+
+eggs=[];
+
+complete=0;
+
+stage.innerHTML="";
 
 colors.forEach((color,c)=>{
 
@@ -410,7 +379,7 @@ el.style.height=(SIZE*1.2)+"px";
 
 stage.appendChild(el);
 
-eggs.push({
+let egg={
 
 el,
 
@@ -422,15 +391,21 @@ y,
 
 locked:false
 
-});
+};
+
+eggs.push(egg);
+
+addDrag(egg);
 
 }
 
 });
 
-/* drag */
+}
 
-eggs.forEach(e=>{
+/* DRAG */
+
+function addDrag(e){
 
 let ox;
 let oy;
@@ -477,13 +452,15 @@ check(e);
 
 };
 
-});
+}
 
-/* confetti */
+/* CONFETTI */
 
 let particles=[];
 
 function confetti(){
+
+particles=[];
 
 for(let i=0;i<150;i++){
 
@@ -523,7 +500,7 @@ requestAnimationFrame(draw);
 
 }
 
-/* drop */
+/* CHECK */
 
 function check(e){
 
@@ -555,8 +532,6 @@ e.el.style.opacity=0;
 
 if(complete===15){
 
-win.style.opacity=1;
-
 confetti();
 
 draw();
@@ -569,22 +544,23 @@ draw();
 
 }
 
-/* restart */
+/* RESET */
 
 restart.onclick=()=>{
 
-location.reload();
+createEggs();
 
 }
 
-/* render */
+/* START */
+
+createEggs();
 
 function render(){
 
 eggs.forEach(e=>{
 
 e.el.style.transform=
-
 `translate(${e.x}px,${e.y}px)`;
 
 });
