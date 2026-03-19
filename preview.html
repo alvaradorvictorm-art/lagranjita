@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap" rel="stylesheet">
+
+<style>
+
+body{
+margin:0;
+background:#EAF4E6;
+display:flex;
+justify-content:center;
+font-family:'Baloo 2';
+overflow:hidden;
+touch-action:none;
+}
+
+.game{
+width:100vw;
+max-width:500px;
+height:100vh;
+position:relative;
+background:#EAF4E6;
+overflow:hidden;
+}
+
+.title{
+text-align:center;
+margin-top:15px;
+color:#5C8F72;
+line-height:1;
+}
+
+.top{
+font-size:clamp(32px,6vw,46px);
+}
+
+.bottom{
+font-size:clamp(42px,7vw,56px);
+}
+
+.stage{
+position:absolute;
+top:110px;
+height:52%;
+width:100%;
+}
+
+.egg{
+position:absolute;
+width:clamp(30px,7vw,40px);
+height:clamp(40px,8vw,50px);
+border-radius:50% 50% 45% 45%;
+transition:.2s;
+touch-action:none;
+will-change:transform;
+}
+
+.chickens{
+position:absolute;
+bottom:25px;
+width:100%;
+display:flex;
+justify-content:space-around;
+}
+
+.chicken{
+width:65px;
+height:80px;
+position:relative;
+}
+
+.body{
+width:60px;
+height:60px;
+border-radius:50%;
+position:absolute;
+}
+
+.wing{
+width:25px;
+height:30px;
+border-radius:50%;
+position:absolute;
+top:18px;
+opacity:.9;
+}
+
+.left{left:-6px;}
+.right{right:-6px;}
+
+.eye{
+width:12px;
+height:12px;
+background:white;
+border-radius:50%;
+position:absolute;
+top:15px;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.eye.left{left:14px;}
+.eye.right{right:14px;}
+
+.pupil{
+width:6px;
+height:6px;
+background:#E65100;
+border-radius:50%;
+}
+
+.beak{
+width:0;
+height:0;
+border-left:8px solid transparent;
+border-right:8px solid transparent;
+border-top:12px solid #F4511E;
+position:absolute;
+top:32px;
+}
+
+.feet{
+position:absolute;
+bottom:-5px;
+width:100%;
+display:flex;
+justify-content:space-around;
+}
+
+.foot{
+width:14px;
+height:5px;
+background:#F4511E;
+border-radius:10px;
+}
+
+.win{
+position:absolute;
+top:45%;
+width:100%;
+text-align:center;
+font-size:80px;
+opacity:0;
+transition:.5s;
+pointer-events:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="game">
+
+<div class="title">
+<div class="top">LA GRANJA</div>
+<div class="bottom">DE IAN</div>
+</div>
+
+<div class="stage" id="stage"></div>
+
+<div class="win" id="win">
+👏👏👏
+</div>
+
+<div class="chickens">
+
+<!-- chickens igual -->
+
+</div>
+
+</div>
+
+<script>
+
+const stage=document.getElementById("stage");
+const win=document.getElementById("win");
+
+const colors=[
+"#E57373",
+"#64B5F6",
+"#81C784",
+"#FFD54F",
+"#FFB74D"
+];
+
+const eggs=[];
+
+let complete=0;
+let zCounter=1;
+
+/* GET REAL SIZE */
+
+function stageSize(){
+
+return{
+
+w:stage.clientWidth-40,
+h:stage.clientHeight-40
+
+};
+
+}
+
+/* RANDOM RESPONSIVE */
+
+colors.forEach((color,c)=>{
+
+for(let i=0;i<5;i++){
+
+let size=stageSize();
+
+let x=Math.random()*size.w;
+
+let y=Math.random()*size.h;
+
+let el=document.createElement("div");
+
+el.className="egg";
+
+el.style.background=color;
+
+stage.appendChild(el);
+
+eggs.push({
+
+el,
+color:c,
+
+x,
+y,
+
+vx:(Math.random()-.5)*0.3,
+vy:(Math.random()-.5)*0.3,
+
+drag:false,
+locked:false
+
+});
+
+}
+
+});
+
+/* DRAG */
+
+eggs.forEach(e=>{
+
+let offsetX;
+let offsetY;
+
+e.el.addEventListener("pointerdown",ev=>{
+
+if(e.locked)return;
+
+e.drag=true;
+
+zCounter++;
+
+e.el.style.zIndex=zCounter;
+
+let rect=e.el.getBoundingClientRect();
+
+offsetX=ev.clientX-rect.left;
+
+offsetY=ev.clientY-rect.top;
+
+e.vx=0;
+e.vy=0;
+
+});
+
+e.el.addEventListener("pointermove",ev=>{
+
+if(!e.drag)return;
+
+let rect=stage.getBoundingClientRect();
+
+e.x=ev.clientX-rect.left-offsetX;
+
+e.y=ev.clientY-rect.top-offsetY;
+
+});
+
+e.el.addEventListener("pointerup",()=>{
+
+e.drag=false;
+
+checkChicken(e);
+
+});
+
+});
+
+/* SNAP */
+
+const chickens=document.querySelectorAll(".chicken");
+
+function checkChicken(e){
+
+chickens.forEach((chicken,i)=>{
+
+let r=chicken.getBoundingClientRect();
+let er=e.el.getBoundingClientRect();
+
+let cx=r.left+r.width/2;
+let cy=r.top+r.height/2;
+
+let ex=er.left+er.width/2;
+let ey=er.top+er.height/2;
+
+let dist=Math.hypot(cx-ex,cy-ey);
+
+if(dist<90){
+
+if(e.color===i){
+
+e.locked=true;
+
+complete++;
+
+e.el.style.transform="scale(.2)";
+e.el.style.opacity=0;
+
+if(complete===25){
+
+win.style.opacity=1;
+
+}
+
+}
+
+}
+
+});
+
+}
+
+/* SOFT PHYSICS */
+
+function physics(){
+
+let size=stageSize();
+
+for(let e of eggs){
+
+if(e.drag || e.locked)continue;
+
+/* gentle float */
+
+e.vx+= (Math.random()-.5)*0.02;
+e.vy+= (Math.random()-.5)*0.02;
+
+/* friction */
+
+e.vx*=0.98;
+e.vy*=0.98;
+
+/* speed limit */
+
+let max=.4;
+
+if(e.vx>max)e.vx=max;
+if(e.vx<-max)e.vx=-max;
+
+if(e.vy>max)e.vy=max;
+if(e.vy<-max)e.vy=-max;
+
+e.x+=e.vx;
+e.y+=e.vy;
+
+/* bounds */
+
+if(e.x<0)e.x=0;
+if(e.x>size.w)e.x=size.w;
+
+if(e.y<0)e.y=0;
+if(e.y>size.h)e.y=size.h;
+
+}
+
+/* separation smoother */
+
+for(let i=0;i<eggs.length;i++){
+
+for(let j=i+1;j<eggs.length;j++){
+
+let a=eggs[i];
+let b=eggs[j];
+
+if(a.locked||b.locked)continue;
+
+let dx=b.x-a.x;
+let dy=b.y-a.y;
+
+let dist=Math.hypot(dx,dy);
+
+if(dist<35){
+
+let force=.05;
+
+let nx=dx/dist;
+let ny=dy/dist;
+
+a.x-=nx*force;
+a.y-=ny*force;
+
+b.x+=nx*force;
+b.y+=ny*force;
+
+}
+
+}
+
+}
+
+}
+
+function render(){
+
+physics();
+
+eggs.forEach(e=>{
+
+e.el.style.transform=
+`translate(${e.x}px,${e.y}px)`;
+
+});
+
+requestAnimationFrame(render);
+
+}
+
+render();
+
+</script>
+
+</body>
+
+</html>
