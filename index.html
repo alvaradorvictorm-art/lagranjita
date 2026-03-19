@@ -3,24 +3,32 @@
 
 <head>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600&display=swap" rel="stylesheet">
 
 <style>
 
 body{
+
 margin:0;
+
 background:#C48A5A;
+
 display:flex;
+
 justify-content:center;
+
 font-family:'Baloo 2';
+
 }
 
 .game{
 
 width:100vw;
+
 max-width:520px;
+
 height:100vh;
 
 background:#E8E2CC;
@@ -30,8 +38,6 @@ border-radius:30px;
 position:relative;
 
 overflow:hidden;
-
-margin-top:10px;
 
 }
 
@@ -59,6 +65,8 @@ width:100%;
 
 }
 
+/* EGGS */
+
 .egg{
 
 position:absolute;
@@ -69,9 +77,69 @@ touch-action:none;
 
 cursor:pointer;
 
-transition:.15s;
+transition:.12s;
+
+overflow:hidden;
 
 }
+
+/* TAP EFFECT */
+
+.egg:active{
+
+transform:scale(1.1);
+
+}
+
+/* EGG SHADING */
+
+.egg::before{
+
+content:"";
+
+position:absolute;
+
+width:100%;
+
+height:100%;
+
+border-radius:50%;
+
+background:linear-gradient(
+
+to bottom,
+
+rgba(255,255,255,.3),
+
+rgba(0,0,0,.08)
+
+);
+
+opacity:.3;
+
+}
+
+.egg::after{
+
+content:"";
+
+position:absolute;
+
+width:45%;
+
+height:45%;
+
+left:18%;
+
+top:12%;
+
+border-radius:50%;
+
+background:rgba(255,255,255,.35);
+
+}
+
+/* CHICKENS */
 
 .chickens{
 
@@ -124,6 +192,7 @@ top:18px;
 }
 
 .eye.left{left:14px;}
+
 .eye.right{right:14px;}
 
 .pupil{
@@ -176,6 +245,20 @@ transition:.5s;
 
 }
 
+/* CONFETTI */
+
+canvas{
+
+position:absolute;
+
+top:0;
+
+left:0;
+
+pointer-events:none;
+
+}
+
 </style>
 
 </head>
@@ -197,6 +280,8 @@ LA GRANJA<br>DE IAN
 🎉👏🎉
 
 </div>
+
+<canvas id="confetti"></canvas>
 
 <div class="chickens">
 
@@ -249,6 +334,14 @@ const win=document.getElementById("win");
 
 const chickens=document.querySelectorAll(".chicken");
 
+const canvas=document.getElementById("confetti");
+
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+
+canvas.height=window.innerHeight;
+
 const colors=[
 
 "#E06A6A",
@@ -267,7 +360,7 @@ let z=1;
 
 const SIZE=95;
 
-/* spawn */
+/* SPAWN */
 
 colors.forEach((color,c)=>{
 
@@ -340,7 +433,7 @@ locked:false
 
 });
 
-/* drag */
+/* DRAG */
 
 eggs.forEach(e=>{
 
@@ -377,8 +470,6 @@ e.x=ev.clientX-rect.left-ox;
 
 e.y=ev.clientY-rect.top-oy;
 
-/* bounds */
-
 if(e.x<0)e.x=0;
 if(e.y<0)e.y=0;
 
@@ -389,39 +480,6 @@ let maxY=stage.offsetHeight+120;
 
 if(e.y>maxY)
 e.y=maxY;
-
-/* push others */
-
-for(let other of eggs){
-
-if(other===e || other.locked)continue;
-
-let dx=other.x-e.x;
-
-let dy=other.y-e.y;
-
-let dist=Math.hypot(dx,dy);
-
-if(dist<SIZE){
-
-let push=(SIZE-dist);
-
-let nx=dx/dist || 0;
-
-let ny=dy/dist || 0;
-
-other.x+=nx*push;
-
-other.y+=ny*push;
-
-/* keep them inside */
-
-other.x=Math.max(0,Math.min(other.x,stage.offsetWidth-SIZE));
-other.y=Math.max(0,Math.min(other.y,maxY));
-
-}
-
-}
 
 };
 
@@ -437,7 +495,51 @@ check(e);
 
 });
 
-/* drop */
+/* CONFETTI */
+
+let particles=[];
+
+function confetti(){
+
+for(let i=0;i<150;i++){
+
+particles.push({
+
+x:Math.random()*canvas.width,
+
+y:-20,
+
+size:6+Math.random()*6,
+
+speed:2+Math.random()*3,
+
+color:colors[Math.floor(Math.random()*5)]
+
+});
+
+}
+
+}
+
+function draw(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+particles.forEach(p=>{
+
+ctx.fillStyle=p.color;
+
+ctx.fillRect(p.x,p.y,p.size,p.size);
+
+p.y+=p.speed;
+
+});
+
+requestAnimationFrame(draw);
+
+}
+
+/* DROP */
 
 function check(e){
 
@@ -471,6 +573,10 @@ if(complete===15){
 
 win.style.opacity=1;
 
+confetti();
+
+draw();
+
 }
 
 }
@@ -481,7 +587,7 @@ win.style.opacity=1;
 
 }
 
-/* render */
+/* RENDER */
 
 function render(){
 
