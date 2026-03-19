@@ -10,14 +10,14 @@
 <style>
 
 body{
+
 margin:0;
 background:#C48A5A;
-display:flex;
-justify-content:center;
 font-family:'Baloo 2';
+
 }
 
-.game{
+.screen{
 
 width:100vw;
 max-width:520px;
@@ -25,23 +25,47 @@ height:100vh;
 
 background:#E8E2CC;
 
+margin:auto;
+
 border-radius:30px;
 
 position:relative;
 
 overflow:hidden;
 
+display:none;
+
 }
 
-.title{
+#menu{
+
+display:block;
 
 text-align:center;
 
-color:#6FB072;
+padding-top:80px;
 
-padding:20px;
+}
 
-font-size:clamp(35px,6vw,55px);
+button{
+
+background:#6FB072;
+
+color:white;
+
+border:none;
+
+padding:15px;
+
+margin:10px;
+
+font-size:22px;
+
+border-radius:15px;
+
+cursor:pointer;
+
+width:200px;
 
 }
 
@@ -65,11 +89,19 @@ border-radius:50%;
 
 cursor:pointer;
 
-touch-action:none;
-
 transition:.12s;
 
-overflow:hidden;
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:40px;
+
+color:white;
+
+font-weight:bold;
 
 }
 
@@ -79,53 +111,11 @@ transform:scale(1.1);
 
 }
 
-.egg::before{
-
-content:"";
-
-position:absolute;
-
-width:100%;
-
-height:100%;
-
-border-radius:50%;
-
-background:linear-gradient(
-to bottom,
-rgba(255,255,255,.3),
-rgba(0,0,0,.1)
-);
-
-opacity:.3;
-
-}
-
-.egg::after{
-
-content:"";
-
-position:absolute;
-
-width:45%;
-
-height:45%;
-
-left:18%;
-
-top:12%;
-
-border-radius:50%;
-
-background:rgba(255,255,255,.35);
-
-}
-
 .chickens{
 
 position:absolute;
 
-bottom:70px;
+bottom:80px;
 
 width:100%;
 
@@ -133,116 +123,38 @@ display:flex;
 
 justify-content:space-around;
 
+font-size:30px;
+
 }
 
-.chicken{
+.target{
 
 width:70px;
-
 height:70px;
 
-position:relative;
-
-}
-
-.body{
-
-width:65px;
-height:65px;
-
 border-radius:50%;
 
-position:absolute;
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+color:white;
+
+font-size:32px;
 
 }
 
-.eye{
-
-width:14px;
-height:14px;
-
-background:white;
-
-border-radius:50%;
-
-position:absolute;
-
-top:18px;
-
-}
-
-.eye.left{left:14px;}
-.eye.right{right:14px;}
-
-.pupil{
-
-width:8px;
-height:8px;
-
-background:#6B3E00;
-
-border-radius:50%;
-
-margin:3px;
-
-}
-
-.beak{
-
-width:0;
-height:0;
-
-border-left:10px solid transparent;
-border-right:10px solid transparent;
-
-border-top:18px solid #FF8A00;
-
-position:absolute;
-
-top:32px;
-
-left:22px;
-
-}
-
-/* BOTON */
-
-#restart{
+.controls{
 
 position:absolute;
 
 bottom:10px;
 
-width:160px;
+width:100%;
 
-left:50%;
-
-transform:translateX(-50%);
-
-background:#6FB072;
-
-color:white;
-
-border:none;
-
-padding:12px;
-
-font-size:20px;
-
-border-radius:15px;
-
-cursor:pointer;
-
-}
-
-canvas{
-
-position:absolute;
-
-top:0;
-left:0;
-
-pointer-events:none;
+text-align:center;
 
 }
 
@@ -252,55 +164,77 @@ pointer-events:none;
 
 <body>
 
-<div class="game">
+<div id="menu" class="screen">
 
-<div class="title">
+<h1>JUEGOS</h1>
 
-LA GRANJA<br>DE IAN
+<button onclick="openGame('animals')">ANIMALES</button>
 
-</div>
+<button onclick="openGame('numbers')">NÚMEROS</button>
 
-<div class="stage" id="stage"></div>
-
-<canvas id="confetti"></canvas>
-
-<div class="chickens">
-
-<div class="chicken"><div class="body" style="background:#E06A6A"></div><div class="eye left"><div class="pupil"></div></div><div class="eye right"><div class="pupil"></div></div><div class="beak"></div></div>
-
-<div class="chicken"><div class="body" style="background:#5FA0D3"></div><div class="eye left"><div class="pupil"></div></div><div class="eye right"><div class="pupil"></div></div><div class="beak"></div></div>
-
-<div class="chicken"><div class="body" style="background:#7CB77A"></div><div class="eye left"><div class="pupil"></div></div><div class="eye right"><div class="pupil"></div></div><div class="beak"></div></div>
-
-<div class="chicken"><div class="body" style="background:#F1CC4B"></div><div class="eye left"><div class="pupil"></div></div><div class="eye right"><div class="pupil"></div></div><div class="beak"></div></div>
-
-<div class="chicken"><div class="body" style="background:#F4AD42"></div><div class="eye left"><div class="pupil"></div></div><div class="eye right"><div class="pupil"></div></div><div class="beak"></div></div>
+<button onclick="openGame('vowels')">VOCALES</button>
 
 </div>
 
-<button id="restart">REINICIAR</button>
+<div id="animals" class="screen">
+
+<div class="stage"></div>
+
+<div class="chickens"></div>
+
+<div class="controls">
+
+<button onclick="resetGame()">REINICIAR</button>
+
+<button onclick="backMenu()">ATRÁS</button>
+
+</div>
+
+</div>
+
+<div id="numbers" class="screen">
+
+<div class="stage"></div>
+
+<div class="chickens"></div>
+
+<div class="controls">
+
+<button onclick="resetGame()">REINICIAR</button>
+
+<button onclick="backMenu()">ATRÁS</button>
+
+</div>
+
+</div>
+
+<div id="vowels" class="screen">
+
+<div class="stage"></div>
+
+<div class="chickens"></div>
+
+<div class="controls">
+
+<button onclick="resetGame()">REINICIAR</button>
+
+<button onclick="backMenu()">ATRÁS</button>
+
+</div>
 
 </div>
 
 <script>
 
-window.onload=()=>{
+let currentGame=null;
 
-const stage=document.getElementById("stage");
+let eggs=[];
 
-const restart=document.getElementById("restart");
+let complete=0;
 
-const chickens=document.querySelectorAll(".chicken");
+let SIZE=95;
 
-const canvas=document.getElementById("confetti");
-
-const ctx=canvas.getContext("2d");
-
-canvas.width=window.innerWidth;
-
-canvas.height=window.innerHeight;
-
-const colors=[
+let colors=[
 
 "#E06A6A",
 "#5FA0D3",
@@ -310,27 +244,65 @@ const colors=[
 
 ];
 
-let eggs=[];
+let sets={
 
-let complete=0;
+animals:["🥚","🥚","🥚","🥚","🥚"],
 
-let z=1;
+numbers:["1","2","3","4","5"],
 
-const SIZE=95;
+vowels:["A","E","I","O","U"]
 
-/* CREATE EGGS */
+};
 
-function createEggs(){
+function openGame(type){
+
+document.getElementById("menu").style.display="none";
+
+document.getElementById(type).style.display="block";
+
+currentGame=type;
+
+createGame(type);
+
+}
+
+function backMenu(){
+
+document.getElementById(currentGame).style.display="none";
+
+document.getElementById("menu").style.display="block";
+
+}
+
+function createGame(type){
+
+let screen=document.getElementById(type);
+
+let stage=screen.querySelector(".stage");
+
+let targets=screen.querySelector(".chickens");
+
+stage.innerHTML="";
+
+targets.innerHTML="";
 
 eggs=[];
 
 complete=0;
 
-stage.innerHTML="";
+sets[type].forEach((symbol,i)=>{
 
-colors.forEach((color,c)=>{
+let t=document.createElement("div");
 
-for(let i=0;i<3;i++){
+t.className="target";
+
+t.style.background=colors[i];
+
+t.innerText=symbol;
+
+targets.appendChild(t);
+
+for(let k=0;k<3;k++){
 
 let placed=false;
 
@@ -339,25 +311,17 @@ let y;
 
 while(!placed){
 
-let w=stage.offsetWidth-SIZE;
+x=Math.random()*(stage.offsetWidth-SIZE);
 
-let h=stage.offsetHeight;
-
-x=Math.random()*w;
-
-y=Math.random()*h;
+y=Math.random()*(stage.offsetHeight);
 
 placed=true;
 
-for(let other of eggs){
+for(let o of eggs){
 
-let dx=x-other.x;
+let d=Math.hypot(x-o.x,y-o.y);
 
-let dy=y-other.y;
-
-let dist=Math.hypot(dx,dy);
-
-if(dist<SIZE){
+if(d<SIZE){
 
 placed=false;
 
@@ -371,11 +335,13 @@ let el=document.createElement("div");
 
 el.className="egg";
 
-el.style.background=color;
+el.style.background=colors[i];
 
 el.style.width=SIZE+"px";
 
 el.style.height=(SIZE*1.2)+"px";
+
+el.innerText=symbol;
 
 stage.appendChild(el);
 
@@ -383,7 +349,7 @@ let egg={
 
 el,
 
-color:c,
+color:i,
 
 x,
 
@@ -395,7 +361,7 @@ locked:false
 
 eggs.push(egg);
 
-addDrag(egg);
+drag(egg,stage,targets);
 
 }
 
@@ -403,9 +369,7 @@ addDrag(egg);
 
 }
 
-/* DRAG */
-
-function addDrag(e){
+function drag(e,stage,targets){
 
 let ox;
 let oy;
@@ -414,12 +378,6 @@ e.el.onpointerdown=ev=>{
 
 if(e.locked)return;
 
-z++;
-
-e.el.style.zIndex=z;
-
-e.el.setPointerCapture(ev.pointerId);
-
 let r=e.el.getBoundingClientRect();
 
 ox=ev.clientX-r.left;
@@ -427,6 +385,8 @@ ox=ev.clientX-r.left;
 oy=ev.clientY-r.top;
 
 e.drag=true;
+
+e.el.setPointerCapture(ev.pointerId);
 
 };
 
@@ -448,79 +408,29 @@ e.drag=false;
 
 e.el.releasePointerCapture(ev.pointerId);
 
-check(e);
+check(e,targets);
 
 };
 
 }
 
-/* CONFETTI */
-
-let particles=[];
-
-function confetti(){
-
-particles=[];
-
-for(let i=0;i<150;i++){
-
-particles.push({
-
-x:Math.random()*canvas.width,
-
-y:-20,
-
-size:6,
-
-speed:2+Math.random()*2,
-
-color:colors[Math.floor(Math.random()*5)]
-
-});
-
-}
-
-}
-
-function draw(){
-
-ctx.clearRect(0,0,canvas.width,canvas.height);
-
-particles.forEach(p=>{
-
-ctx.fillStyle=p.color;
-
-ctx.fillRect(p.x,p.y,p.size,p.size);
-
-p.y+=p.speed;
-
-});
-
-requestAnimationFrame(draw);
-
-}
-
-/* CHECK */
-
-function check(e){
+function check(e,targets){
 
 if(e.locked)return;
 
-chickens.forEach((chicken,i)=>{
+[...targets.children].forEach((t,i)=>{
 
-let r=chicken.getBoundingClientRect();
+let r=t.getBoundingClientRect();
 
 let er=e.el.getBoundingClientRect();
 
-let cx=r.left+r.width/2;
+let d=Math.hypot(
 
-let cy=r.top+r.height/2;
+(r.left+r.width/2)-(er.left+er.width/2),
 
-let ex=er.left+er.width/2;
+(r.top+r.height/2)-(er.top+er.height/2)
 
-let ey=er.top+er.height/2;
-
-let d=Math.hypot(cx-ex,cy-ey);
+);
 
 if(d<140 && e.color===i){
 
@@ -530,37 +440,24 @@ complete++;
 
 e.el.style.opacity=0;
 
-if(complete===15){
-
-confetti();
-
-draw();
-
-}
-
 }
 
 });
 
 }
 
-/* RESET */
+function resetGame(){
 
-restart.onclick=()=>{
-
-createEggs();
+createGame(currentGame);
 
 }
-
-/* START */
-
-createEggs();
 
 function render(){
 
 eggs.forEach(e=>{
 
 e.el.style.transform=
+
 `translate(${e.x}px,${e.y}px)`;
 
 });
@@ -570,8 +467,6 @@ requestAnimationFrame(render);
 }
 
 render();
-
-}
 
 </script>
 
