@@ -18,6 +18,7 @@ font-family:'Baloo 2';
 }
 
 .game{
+
 width:100vw;
 max-width:520px;
 height:100vh;
@@ -31,6 +32,7 @@ position:relative;
 overflow:hidden;
 
 margin-top:10px;
+
 }
 
 .title{
@@ -122,15 +124,11 @@ top:18px;
 }
 
 .eye.left{
-
 left:14px;
-
 }
 
 .eye.right{
-
 right:14px;
-
 }
 
 .pupil{
@@ -270,7 +268,9 @@ let complete=0;
 
 let z=1;
 
-const SIZE=42;
+/* 50% bigger */
+
+const SIZE=63;
 
 /* spawn separated */
 
@@ -303,7 +303,7 @@ let dy=y-other.y;
 
 let dist=Math.hypot(dx,dy);
 
-if(dist<SIZE*1.2){
+if(dist<SIZE*1.3){
 
 placed=false;
 
@@ -393,7 +393,7 @@ if(e.x>stage.clientWidth-SIZE)e.x=stage.clientWidth-SIZE;
 
 if(e.y>stage.clientHeight-SIZE)e.y=stage.clientHeight-SIZE;
 
-/* push others */
+/* push others but allow chicken area */
 
 for(let other of eggs){
 
@@ -405,7 +405,7 @@ let dy=other.y-e.y;
 
 let dist=Math.hypot(dx,dy);
 
-if(dist<SIZE){
+if(dist<SIZE*0.9){
 
 let push=(SIZE-dist);
 
@@ -453,7 +453,7 @@ let ey=er.top+er.height/2;
 
 let d=Math.hypot(cx-ex,cy-ey);
 
-if(d<70){
+if(d<90){
 
 if(e.color===i){
 
